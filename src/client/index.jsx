@@ -6,6 +6,8 @@ import { AppContainer } from 'react-hot-loader';
 import App from './App';
 import configureStore from './redux/configureStore';
 
+import 'bulma/bulma.sass';
+
 const store = configureStore();
 
 const renderApp = (Component) => render(
