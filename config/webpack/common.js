@@ -12,7 +12,7 @@ const js = {
 };
 
 const scss = {
-  test: /\.scss$/,
+  test: /\.s[ac]ss$/,
   use: ['style-loader', 'css-loader', 'sass-loader'],
 };
 
