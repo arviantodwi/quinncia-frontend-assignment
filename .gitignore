@@ -88,3 +88,4 @@ dist/
 package-lock.json
 
 src/server/storage
+storage
