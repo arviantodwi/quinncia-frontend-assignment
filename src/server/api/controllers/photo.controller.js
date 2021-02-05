@@ -34,11 +34,13 @@ export const create = async (req, res) => {
     ),
   );
 
-  await new Promise((result) => {
+  await new Promise(result => {
+    const fileExt = req.file.originalname.split('.').pop();
+
     fs.rename(
       req.file.path,
-      path.resolve(`../storage/photo-${newPhoto._id}.png`),
-      result,
+      path.resolve(`${__dirname}/../storage/photo-${newPhoto._id}.${fileExt}`),
+      result
     );
   });
 
@@ -156,7 +158,14 @@ export const getOne = async (req, res) => {
 };
 
 export const getContent = async (req, res) => {
-  res.sendFile(path.resolve(`../storage/photo-${req.params.id}.png`));
+  const file = path.resolve(`${__dirname}/../storage/photo-${req.params.id}`);
+
+  fs.access(`${file}.png`, fs.F_OK, err => {
+    const ext = err ? 'jpg' : 'png';
+    res.sendFile(
+      path.resolve(`${__dirname}/../storage/photo-${req.params.id}.${ext}`)
+    );
+  });
 };
 
 export const getMany = async (req, res) => {
