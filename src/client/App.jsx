@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
-import logo from './logo.png';
+import { connect } from 'react-redux';
+import { GET_PHOTOS, GET_PHOTO_CONTENT } from './lib/api';
+import PropTypes from 'prop-types';
+import { pushPhotos } from './redux/photos';
+import Navbar from './components/Navbar';
+import Modal from './components/Modal';
 
-const API_GET_PHOTOS = 'http://localhost:3000/api/photo/many/';
-const API_GET_PHOTOS_CONTENT = id =>
-  `http://localhost:3000/api/photo/content/${id}`;
-
-const Container = styled.div.attrs(_ => ({ className: 'container' }))``;
+const Container = styled.div.attrs(_ => ({ className: 'container' }))`
+  padding-top: 52px;
+`;
 
 const PhotosListContainer = styled.div`
   column-count: 3;
@@ -19,20 +22,12 @@ const PhotoItem = styled.div.attrs(() => ({ className: 'card' }))`
   display: inline-block;
 `;
 
-const fetchPhotos = async () => {
-  const response = await fetch(API_GET_PHOTOS).then(res => res.json());
-
-  return response.photos;
-};
-
-const getPhotoSource = id => API_GET_PHOTOS_CONTENT(id);
-
 const PhotoList = props => {
   const photoItems = props.photos.map((item, index) => (
     <PhotoItem key={index}>
       <div className="card-image">
         <figure className="image">
-          <img src={getPhotoSource(item._id)} alt="" />
+          <img src={GET_PHOTO_CONTENT(item._id)} alt="" />
         </figure>
       </div>
     </PhotoItem>
@@ -41,21 +36,37 @@ const PhotoList = props => {
   return <PhotosListContainer>{photoItems}</PhotosListContainer>;
 };
 
-const App = () => {
-  const [photos, setPhotos] = useState([]);
+const App = ({ photos, pushPhotos }) => {
+  // const [photos, setPhotos] = useState([]);
 
   useEffect(() => {
-    (async () => await fetchPhotos().then(res => setPhotos(res)))();
+    fetch(GET_PHOTOS)
+      .then(res => res.json())
+      .then(res => pushPhotos(res.photos));
   }, []);
 
   return (
-    <Container>
-      <PhotoList photos={photos} />
-    </Container>
+    <>
+      <Navbar />
+      <Container>
+        <PhotoList photos={photos} />
+      </Container>
+      <Modal />
+    </>
   );
 };
 
-export default App;
+App.propTypes = {
+  photos: PropTypes.array.isRequired,
+};
+
+const mapStateToProps = ({ photosReducer: { photos } }) => ({ photos });
+
+const mapDispatchToProps = {
+  pushPhotos,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
 
 // import Counter from './Counter';
 
