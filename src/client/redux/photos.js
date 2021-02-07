@@ -25,6 +25,10 @@ const photosReducer = (state = defaultState, action) => {
       return Object.assign({}, state, {
         photos: [...state.photos, ...action.payload.photos],
       });
+    case PHOTOS_ACTIVE_PHOTO:
+      return Object.assign({}, state, {
+        activePhoto: action.payload.activePhoto,
+      });
     default:
       return state;
   }

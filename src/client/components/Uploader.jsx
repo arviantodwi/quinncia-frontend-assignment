@@ -2,10 +2,15 @@ import React, { useRef } from 'react';
 import { POST_PHOTO } from '../lib/api';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { showModal } from '../redux/modal';
-import { pushPhotos } from '../redux/photos';
+import { showModal, setModalContentType } from '../redux/modal';
+import { pushPhotos, setActivePhoto } from '../redux/photos';
 
-const Uploader = ({ showModal, pushPhotos }) => {
+const Uploader = ({
+  showModal,
+  setModalContentType,
+  pushPhotos,
+  setActivePhoto,
+}) => {
   const fileInput = useRef(null);
 
   const uploadPhoto = () => {
@@ -21,6 +26,8 @@ const Uploader = ({ showModal, pushPhotos }) => {
       .then(res => res.json())
       .then(res => {
         pushPhotos([res.photo]);
+        setActivePhoto(res.photo._id);
+        setModalContentType('update');
         showModal();
       });
   };
@@ -45,12 +52,16 @@ const Uploader = ({ showModal, pushPhotos }) => {
 
 Uploader.propTypes = {
   showModal: PropTypes.func.isRequired,
+  setModalContentType: PropTypes.func.isRequired,
   pushPhotos: PropTypes.func.isRequired,
+  setActivePhoto: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = {
   showModal,
+  setModalContentType,
   pushPhotos,
+  setActivePhoto,
 };
 
 export default connect(null, mapDispatchToProps)(Uploader);
