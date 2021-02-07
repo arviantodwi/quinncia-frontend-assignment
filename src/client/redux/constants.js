@@ -1,5 +1,5 @@
-export const COUNTER_INCREMENT = 'feature/counter/increment';
-export const COUNTER_DECREMENT = 'feature/counter/decrement';
+// export const COUNTER_INCREMENT = 'feature/counter/increment';
+// export const COUNTER_DECREMENT = 'feature/counter/decrement';
 
 export const MODAL_SHOW = 'feature/modal/show';
 export const MODAL_CLOSE = 'feature/modal/close';
