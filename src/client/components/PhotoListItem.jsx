@@ -2,7 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { GET_PHOTO_CONTENT } from '../lib/api';
 import { showModal, setModalContentType } from '../redux/modal';
+import { setActivePhoto } from '../redux/photos';
 import { connect } from 'react-redux';
+import Photo from './Photo';
 
 const Container = styled.div.attrs(() => ({ className: 'card' }))`
   margin-bottom: 16px;
@@ -10,32 +12,35 @@ const Container = styled.div.attrs(() => ({ className: 'card' }))`
   cursor: pointer;
 `;
 
-const Photo = ({ source }) => (
-  <div className="card-image">
-    <figure className="image">
-      <img src={source} alt={''} />
-    </figure>
-  </div>
+const PhotoContainer = ({ children }) => (
+  <div className="card-image">{children}</div>
 );
 
-const PhotoListItem = ({ photo, showModal, setModalContentType }) => {
+const PhotoListItem = ({
+  photo,
+  showModal,
+  setModalContentType,
+  setActivePhoto,
+}) => {
   const onPhotoItemClick = () => {
     setModalContentType('detail');
+    setActivePhoto(photo._id);
     showModal();
   };
 
   return (
     <Container onClick={onPhotoItemClick}>
-      <Photo source={GET_PHOTO_CONTENT(photo._id)} />
+      <PhotoContainer>
+        <Photo source={GET_PHOTO_CONTENT(photo._id)} />
+      </PhotoContainer>
     </Container>
   );
 };
 
-// const mapStateToProps = () => ();
-
 const mapDispatchToProps = {
   showModal,
   setModalContentType,
+  setActivePhoto,
 };
 
 export default connect(null, mapDispatchToProps)(PhotoListItem);
